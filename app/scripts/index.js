@@ -42,7 +42,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (finalTranscript) {
             $.get("http://localhost:9876", {'stt': finalTranscript}, function(response) {
                 console.log("response: ", response);
-	    });
+	    }).fail(function() {
+                transcriptElement.innerText = 'couldn\'t connect with core';
+            });
         }
 
         if (timeout) {

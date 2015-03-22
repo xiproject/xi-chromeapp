@@ -1,11 +1,10 @@
 'use strict';
 
-
+var timeout;
+var transcriptElement;
 document.addEventListener('DOMContentLoaded', function() {
-    var h2 = document.getElementsByTagName('h2');
-    if (h2.length > 0) {
-        h2[0].innerText = h2[0].innerText + ' \'Allo';
-    }
+    transcriptElement = document.getElementsByTagName('h2')[0];
+
     var sr = new webkitSpeechRecognition();
     sr.continuous = true; 
     sr.interimResults = true;
@@ -39,16 +38,26 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             console.log(event.results[i][0].transcript, event.results[i].isFinal, str);
         }
-        h2[0].innerText = finalTranscript + interimTranscript;
+        transcriptElement.innerText = finalTranscript + interimTranscript;
         if (finalTranscript) {
             $.get("http://localhost:9876", {'stt': finalTranscript}, function(response) {
                 console.log("response: ", response);
 	    });
         }
+
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+        timeout = setTimeout(clearTranscript, 5000);
+
+
     };
     sr.start();
 }, false);
 
 
+function clearTranscript() {
+    transcriptElement.innerText = ''
+}
 
 

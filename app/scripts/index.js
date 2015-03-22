@@ -1,11 +1,12 @@
 'use strict';
-
+var sr;
 var timeout;
 var transcriptElement;
+var interimTranscript;
 document.addEventListener('DOMContentLoaded', function() {
     transcriptElement = document.getElementsByTagName('h2')[0];
 
-    var sr = new webkitSpeechRecognition();
+    sr = new webkitSpeechRecognition();
     sr.continuous = true; 
     sr.interimResults = true;
     sr.lang='en-IN';
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     sr.onresult = function(e) {
         var finalTranscript = '';
-        var interimTranscript = '';
+        interimTranscript = '';
         for (var i = event.resultIndex; i < event.results.length; ++i) {
             if (event.results[i].isFinal) {
                 finalTranscript += event.results[i][0].transcript;
@@ -50,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (timeout) {
             clearTimeout(timeout);
         }
-        timeout = setTimeout(clearTranscript, 5000);
+        timeout = setTimeout(clearTranscript, 3000);
 
 
     };
@@ -59,6 +60,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function clearTranscript() {
+    if (interimTranscript) {
+        $.get("http://localhost:9876", {'stt': interimTranscript}, function(response) {
+            console.log("response: ", response);
+	}).fail(function() {
+            transcriptElement.innerText = 'couldn\'t connect with core';
+        });
+        console.log('Taking too long, sending interim transcript');
+        sr.stop();
+    }
+    interimTranscript = '';
     transcriptElement.innerText = ''
 }
 

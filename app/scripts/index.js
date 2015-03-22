@@ -3,6 +3,7 @@ var sr;
 var timeout;
 var transcriptElement;
 var interimTranscript;
+var stopped = false;
 document.addEventListener('DOMContentLoaded', function() {
     transcriptElement = document.getElementsByTagName('h2')[0];
 
@@ -16,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     sr.onstart = function() {
         console.log('Recognition started');
+        stopped = false;
 
     };
     sr.onend = function() {
@@ -23,6 +25,9 @@ document.addEventListener('DOMContentLoaded', function() {
         sr.start();
     };
     sr.onresult = function(e) {
+        if (stopped) {
+            return;
+        }
         var finalTranscript = '';
         interimTranscript = '';
         for (var i = event.resultIndex; i < event.results.length; ++i) {
@@ -61,13 +66,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function clearTranscript() {
     if (interimTranscript) {
+        stopped = true;
+        sr.stop();
         $.get("http://localhost:9876", {'stt': interimTranscript}, function(response) {
             console.log("response: ", response);
 	}).fail(function() {
             transcriptElement.innerText = 'couldn\'t connect with core';
         });
         console.log('Taking too long, sending interim transcript');
-        sr.stop();
+
     }
     interimTranscript = '';
     transcriptElement.innerText = ''

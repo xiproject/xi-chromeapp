@@ -1,24 +1,24 @@
 {
-  	"name": "__MSG_appName__",
-  	"description": "__MSG_appDescription__",
-  	"version": "1",
-  	"manifest_version": 2,
-  	"default_locale": "en",
-  	"permissions": [
-  		"audioCapture",
-  		"http://127.0.0.1/*"
-  	],
-  	"icons": {
-  		"16": "images/xi.png", 
-  		"128": "images/xi.png"
-  	},
-  	"app": {
-  		"background": {
-  			"scripts": [
-  				"scripts/main.js",
-  			    "scripts/chromereload.js",
-                            "scripts/jquery-2.1.0.min.js"
-  			]
-  		}
-  	}
-  }
+    "name": "__MSG_appName__",
+    "description": "__MSG_appDescription__",
+    "version": "2",
+    "manifest_version": 2,
+    "default_locale": "en",
+    "permissions": [
+        "audioCapture",
+        "http://127.0.0.1/*"
+    ],
+    "icons": {
+        "16": "images/xi.png",
+        "128": "images/xi.png"
+    },
+    "app": {
+        "background": {
+            "scripts": [
+                "scripts/main.js",
+                "scripts/chromereload.js",
+                "scripts/jquery-2.1.0.min.js"
+            ]
+        }
+    }
+}
